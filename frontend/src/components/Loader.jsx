@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Loader = () => {
+  const [showMessage, setShowMessage] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowMessage(true);
+    }, 2000);
+
+    // Cleanup function to clear the timer if component unmounts or request completes before 2 seconds
+    return () => clearTimeout(timer);
+  }, []);
   return (
-    <div role="status">
+    <div
+      role="status"
+      className="flex flex-col items-center justify-center gap-1"
+    >
       <svg
-        aria-hidden="true"
-        className="w-8 h-8 text-gray-600 animate-spin fill-white"
+        className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -20,6 +32,11 @@ const Loader = () => {
         />
       </svg>
       <span className="sr-only">Loading...</span>
+      {showMessage && (
+        <span className="text-white text-base">
+          Hang on tight first request takes time....
+        </span>
+      )}
     </div>
   );
 };

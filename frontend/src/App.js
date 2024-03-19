@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import CodePage from "./pages/CodePage";
+import { Toaster } from "react-hot-toast";
 import Submissions from "./pages/Submissions";
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <Route path="/" element={<CodePage />} />
         <Route path="/submissions" element={<Submissions />} />
       </Routes>
+      <Toaster />
     </div>
   );
 }

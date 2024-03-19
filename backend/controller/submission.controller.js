@@ -41,7 +41,7 @@ export const getAllSubmission = async (req, res) => {
     const submissions = await prisma.submission.findMany({
       take: perPage,
       skip: skip,
-      orderBy: { timestamp: "desc" }, // Optionally order by timestamp
+      orderBy: { timestamp: "desc" },
     });
     const totalSubmissions = await prisma.submission.count();
     res

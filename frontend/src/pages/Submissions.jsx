@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 const Submissions = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [submissions, setSubmissions] = useState(null);
   const [totalSubmissions, setTotalSubmissions] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 10; // Number of submissions per page
+  const perPage = 10;
 
   useEffect(() => {
     fetchSubmissions();
-  }, [currentPage]); // Fetch submissions whenever the current page changes
+  }, [currentPage]);
 
   const fetchSubmissions = async () => {
     setLoading(true);
@@ -38,54 +41,17 @@ const Submissions = () => {
     }
   };
   return (
-    <div className="text-white py-10">
-      <h1 className="text-3xl">Submissions</h1>
-      <div className="py-4">
-        <table className="w-full overflow-x-scroll text-sm text-left rtl:text-right  text-gray-400">
-          <thead className="text-xs uppercase  bg-gray-700 text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Language Id
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Username
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Source Code
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Date
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              "Loading"
-            ) : (
-              <>
-                {submissions?.map((submission) => (
-                  <tr
-                    key={submission.id}
-                    className="border-b bg-gray-800 border-gray-700"
-                  >
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium  whitespace-nowrap text-white"
-                    >
-                      {submission.language_id}
-                    </th>
-                    <td className="px-6 py-4">{submission.username}</td>
-                    <td className="px-6 py-4">
-                      {submission.source_code.substr(0, 100)}
-                    </td>
-                    <td className="px-6 py-4">{submission.timestamp}</td>
-                  </tr>
-                ))}
-              </>
-            )}
-          </tbody>
-        </table>
+    <div className="text-white">
+      <div className="flex justify-between py-2">
+        <h1 className="text-4xl font-bold">TakeUForward</h1>
+        <button
+          onClick={() => navigate("/")}
+          className="px-4 py-1 bg-blue-600 rounded-md"
+        >
+          Compiler
+        </button>
       </div>
+      <h2 className="text-3xl">Submissions</h2>
       <div className="mt-4 flex justify-between">
         <button
           onClick={handlePrevPage}
@@ -104,6 +70,50 @@ const Submissions = () => {
         >
           Next Page
         </button>
+      </div>
+      <div className="py-4 items-center flex justify-center">
+        {loading ? (
+          <Loader />
+        ) : (
+          <table className="w-full overflow-x-scroll text-sm text-left rtl:text-right  text-gray-400">
+            <thead className="text-xs uppercase  bg-gray-700 text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Language Id
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Username
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Source Code
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Date
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {submissions?.map((submission) => (
+                <tr
+                  key={submission.id}
+                  className="border-b bg-gray-800 border-gray-700"
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium  whitespace-nowrap text-white"
+                  >
+                    {submission.language_id}
+                  </th>
+                  <td className="px-6 py-4">{submission.username}</td>
+                  <td className="px-6 py-4">
+                    {submission.source_code.substr(0, 100)}
+                  </td>
+                  <td className="px-6 py-4">{submission.timestamp}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

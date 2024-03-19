@@ -3,6 +3,7 @@ import { CircleX } from "lucide-react";
 import usePostApiData from "../hooks/usePostApiData";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 const Dialog = ({ dialogOpen, setDialogOpen, uploadData }) => {
   const [username, setUsername] = useState("");
   const { sendData, loading, error } = usePostApiData();
@@ -10,7 +11,7 @@ const Dialog = ({ dialogOpen, setDialogOpen, uploadData }) => {
   const handleSubmit = async () => {
     console.log(uploadData);
     if (!username) {
-      return console.log("Enter Username");
+      return toast.error("Please Enter Username");
     }
     const res = await sendData(
       `${process.env.REACT_APP_NODE_API}/submissions`,
@@ -21,9 +22,11 @@ const Dialog = ({ dialogOpen, setDialogOpen, uploadData }) => {
       }
     );
     if (res) {
+      toast.success("Submitted Successfully!!");
       navigate("/submissions");
     }
     if (error) {
+      toast.error(error);
       console.log(error);
     }
   };

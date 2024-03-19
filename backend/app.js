@@ -11,7 +11,9 @@ app.use(express.static("public"));
 
 //routes import
 import submissionRoutes from "./routes/submission.routes.js";
+import serverless from "serverless-http";
 
 //routes declaration
 app.use("/submissions", submissionRoutes);
-export { app };
+export default app;
+export const handler = serverless(app);

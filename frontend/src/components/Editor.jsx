@@ -8,8 +8,7 @@ const Editor = ({ onChange, source_code }) => {
       <CodeMirror
         onChange={onChange}
         value={source_code}
-        extensions={[javascript({ jsx: true })]}
-        className="h-[1000px]"
+        extensions={[javascript()]}
         height="1000px"
         theme={dracula}
       />

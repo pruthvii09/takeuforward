@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 const Submissions = () => {
@@ -42,8 +43,10 @@ const Submissions = () => {
   };
   return (
     <div className="text-white">
-      <div className="flex justify-between py-2">
-        <h1 className="text-4xl font-bold">TakeUForward</h1>
+      <div className="flex justify-between py-4">
+        <a href="/" className="text-3xl font-bold cursor-pointer">
+          takeUforward
+        </a>
         <button
           onClick={() => navigate("/")}
           className="px-4 py-1 bg-blue-600 rounded-md"
@@ -108,7 +111,9 @@ const Submissions = () => {
                   <td className="px-6 py-4">
                     {submission.source_code.substr(0, 100)}
                   </td>
-                  <td className="px-6 py-4">{submission.timestamp}</td>
+                  <td className="px-6 py-4">
+                    {format(new Date(submission.timestamp), "dd MMM yyyy")}
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -10,7 +10,7 @@ const CodePage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploadData, setUploaddata] = useState({
     source_code: "print('Hello')",
-    language_id: 28,
+    language_id: 71,
     stdin: "",
   });
   const [data, setData] = useState(null);
@@ -28,7 +28,7 @@ const CodePage = () => {
         headers: {
           "Content-Type": "application/json",
           "X-RapidAPI-Key": process.env.REACT_APP_X_RAPIDAPI_KEY,
-          "X-RapidAPI-Host": "judge0-extra-ce.p.rapidapi.com",
+          "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
         },
       },
       {
@@ -43,7 +43,7 @@ const CodePage = () => {
           headers: {
             "Content-Type": "application/json",
             "X-RapidAPI-Key": process.env.REACT_APP_X_RAPIDAPI_KEY,
-            "X-RapidAPI-Host": "judge0-extra-ce.p.rapidapi.com",
+            "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
           },
         }
       );
@@ -88,7 +88,7 @@ const CodePage = () => {
               <div className="h-full">
                 {data?.stderr && <p className="text-red-600">{data?.stderr}</p>}
                 {data?.stdout && (
-                  <div className="flex h-full justify-between flex-col">
+                  <div className="flex h-full justify-between flex-col overflow-y-auto">
                     <p>{data?.stdout}</p>
                     <div className="flex w-full justify-between text-sm">
                       <p>⌛Time Taken : {data?.time}</p>
@@ -109,17 +109,19 @@ const CodePage = () => {
           </button>
           <SubmitButton onClick={() => setDialogOpen(true)} />
           <select
-            defaultValue={28}
             value={uploadData.language_id}
             onChange={(e) =>
-              setUploaddata({ ...uploadData, language_id: e.target.value })
+              setUploaddata({
+                ...uploadData,
+                language_id: parseInt(e.target.value),
+              })
             }
             className="border outline-none text-sm rounded-lg block w-full p-2.5 bg-[#282a36] border-gray-600 placeholder-gray-400 text-white "
           >
-            <option value="50">C</option>
-            <option value="54">C++</option>
-            <option value="29">JavaScript</option>
-            <option value="28">Python</option>
+            <option value="62">Java</option>
+            <option value="53">C++</option>
+            <option value="93">JavaScript</option>
+            <option value="71">Python</option>
           </select>
         </div>
         <button

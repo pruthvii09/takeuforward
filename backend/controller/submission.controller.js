@@ -39,7 +39,6 @@ export const getAllSubmission = async (req, res) => {
   const skip = (page - 1) * perPage;
 
   try {
-    // Check if the current page data exists in the cache
     const cacheKey = `page:${page}`;
     const cacheValue = await client.get(cacheKey);
 
@@ -49,17 +48,13 @@ export const getAllSubmission = async (req, res) => {
     }
 
     console.log("Reading From Database");
-    // Fetch submissions from the database
     const submissions = await prisma.submission.findMany({
       take: perPage,
       skip: skip,
       orderBy: { timestamp: "desc" },
     });
 
-    // Calculate total submissions
     const totalSubmissions = await prisma.submission.count();
-
-    // Store the current page data in Redis
     await client.set(
       cacheKey,
       JSON.stringify({
@@ -68,18 +63,14 @@ export const getAllSubmission = async (req, res) => {
         data: submissions,
       })
     );
-
-    // Set expiration for the cache key
     await client.expire(cacheKey, 30);
-
-    // Return the response with the current page data
     res.status(200).json({
       status: "success",
       count: totalSubmissions,
       data: submissions,
     });
 
-    // Now, let's also fetch and cache the next page data if available
+    //next page
     const nextPage = parseInt(page) + 1;
     const nextPageSkip = (nextPage - 1) * perPage;
     const nextPageSubmissions = await prisma.submission.findMany({

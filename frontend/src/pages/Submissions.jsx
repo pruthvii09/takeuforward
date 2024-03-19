@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "../components/Loader";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { getLanguage } from "../helper/language.js";
-import Loader from "../components/Loader";
 const Submissions = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

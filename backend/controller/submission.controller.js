@@ -96,18 +96,3 @@ export const getAllSubmission = async (req, res) => {
     res.status(500).json({ status: "error", error: error });
   }
 };
-
-// // Delete a lecture
-// export const deleteLecture = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     await prisma.lecture.delete({
-//       where: {
-//         id: id,
-//       },
-//     });
-//     res.status(200).json({ status: "success", message: "Lecture deleted" });
-//   } catch (error) {
-//     res.status(500).json({ status: "error", error: error.message });
-//   }
-// };

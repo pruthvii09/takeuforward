@@ -8,13 +8,13 @@ import Dialog from "../components/Dialog";
 const CodePage = () => {
   const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [data, setData] = useState(null);
+  const [getLoading, setLoading] = useState(false);
   const [uploadData, setUploaddata] = useState({
     source_code: "print('Hello')",
     language_id: 71,
     stdin: "",
   });
-  const [data, setData] = useState(null);
-  const [getLoading, setLoading] = useState(false);
   const onChange = (value) => {
     setUploaddata({ ...uploadData, source_code: value });
   };
@@ -37,7 +37,7 @@ const CodePage = () => {
     );
     if (res) {
       const resultResponse = await fetch(
-        `https://judge0.p.rapidapi.com/submissions/${res.token}`,
+        `https://judge0.p.rapidapi.com/submissions/${res?.token}`,
         {
           method: "GET",
           headers: {
@@ -104,6 +104,7 @@ const CodePage = () => {
           <button
             className="px-4 py-2 rounded-lg bg-emerald-700"
             onClick={handleRun}
+            disabled={getLoading}
           >
             Run
           </button>

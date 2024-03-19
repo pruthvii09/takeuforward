@@ -1,4 +1,5 @@
 import { prisma } from "../prisma/prisma.js";
+import { client } from "../redis/redis-connection.js";
 export const addSumbission = async (req, res) => {
   try {
     const { username, language_id, stdin, source_code } = req.body;
@@ -38,17 +39,70 @@ export const getAllSubmission = async (req, res) => {
   const skip = (page - 1) * perPage;
 
   try {
+    // Check if the current page data exists in the cache
+    const cacheKey = `page:${page}`;
+    const cacheValue = await client.get(cacheKey);
+
+    if (cacheValue) {
+      console.log(`cache for page:${page}`);
+      return res.status(200).json(JSON.parse(cacheValue));
+    }
+
+    console.log("Reading From Database");
+    // Fetch submissions from the database
     const submissions = await prisma.submission.findMany({
       take: perPage,
       skip: skip,
       orderBy: { timestamp: "desc" },
     });
+
+    // Calculate total submissions
     const totalSubmissions = await prisma.submission.count();
-    res
-      .status(200)
-      .json({ status: "success", count: totalSubmissions, data: submissions });
+
+    // Store the current page data in Redis
+    await client.set(
+      cacheKey,
+      JSON.stringify({
+        status: "success",
+        count: totalSubmissions,
+        data: submissions,
+      })
+    );
+
+    // Set expiration for the cache key
+    await client.expire(cacheKey, 30);
+
+    // Return the response with the current page data
+    res.status(200).json({
+      status: "success",
+      count: totalSubmissions,
+      data: submissions,
+    });
+
+    // Now, let's also fetch and cache the next page data if available
+    const nextPage = parseInt(page) + 1;
+    const nextPageSkip = (nextPage - 1) * perPage;
+    const nextPageSubmissions = await prisma.submission.findMany({
+      take: perPage,
+      skip: nextPageSkip,
+      orderBy: { timestamp: "desc" },
+    });
+
+    if (nextPageSubmissions.length > 0) {
+      const nextPageCacheKey = `page:${nextPage}`;
+      await client.set(
+        nextPageCacheKey,
+        JSON.stringify({
+          status: "success",
+          count: totalSubmissions,
+          data: nextPageSubmissions,
+        })
+      );
+      await client.expire(nextPageCacheKey, 30);
+    }
   } catch (error) {
-    res.status(500).json({ status: "error", error: error.message });
+    console.log(error);
+    res.status(500).json({ status: "error", error: error });
   }
 };
 

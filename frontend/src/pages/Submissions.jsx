@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { getLanguage } from "../helper/language.js";
 import Loader from "../components/Loader";
 const Submissions = () => {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ const Submissions = () => {
                     scope="row"
                     className="px-6 py-4 font-medium  whitespace-nowrap text-white"
                   >
-                    {submission.language_id}
+                    {getLanguage(submission.language_id)}
                   </th>
                   <td className="px-6 py-4">{submission.username}</td>
                   <td className="px-6 py-4">

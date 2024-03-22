@@ -9,6 +9,7 @@ const CodePage = () => {
   const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [data, setData] = useState(null);
+  const [codeError, setCodeError] = useState("");
   const [getLoading, setLoading] = useState(false);
   const [uploadData, setUploaddata] = useState({
     source_code: "print('Hello')",
@@ -37,7 +38,7 @@ const CodePage = () => {
     );
     if (res) {
       const resultResponse = await fetch(
-        `https://judge0.p.rapidapi.com/submissions/${res?.token}`,
+        `https://judge0.p.rapidapi.com/submissions/${res?.token}?base64_encoded`,
         {
           method: "GET",
           headers: {
@@ -50,7 +51,8 @@ const CodePage = () => {
 
       if (!resultResponse.ok) {
         setLoading(false);
-        throw new Error("Failed to fetch result");
+        setCodeError("Could Not Compile Code");
+        console.log("Failed To Fetch");
       }
 
       const resultData = await resultResponse.json();
@@ -58,13 +60,18 @@ const CodePage = () => {
     }
     if (error) {
       console.log(error);
+      setCodeError(error);
     }
     setLoading(false);
   };
   return (
     <div className="flex flex-col sm:flex-row h-screen text-white py-5 sm:py-10">
       <div className="flex-1">
-        <Editor source_code={uploadData.source_code} onChange={onChange} />
+        <Editor
+          source_code={uploadData.source_code}
+          onChange={onChange}
+          language_id={uploadData.language_id}
+        />
       </div>
       <div className="flex flex-1 flex-col-reverse sm:flex-col gap-8 h-full sm:px-4">
         <div className="">
@@ -96,6 +103,7 @@ const CodePage = () => {
                     </div>
                   </div>
                 )}
+                {codeError && <p className="text-red-600">{codeError}</p>}
               </div>
             )}
           </div>

@@ -22,7 +22,7 @@ const Editor = ({ onChange, source_code, language_id }) => {
     EditorView.lineWrapping,
   ];
   return (
-    <div className="overlay rounded-lg overflow-hidden text-lg w-full h-full shadow-4xl">
+    <div className="overlay !font-mono text-red-600 rounded-lg overflow-hidden text-lg w-full h-full shadow-4xl">
       <CodeMirror
         onChange={onChange}
         value={source_code}
